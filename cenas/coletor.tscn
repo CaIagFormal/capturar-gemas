@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://canen35is57xa"]
+
+[ext_resource type="Script" uid="uid://muuyarpo7jfy" path="res://cenas/coletor.gd" id="1_5vmwb"]
+[ext_resource type="Texture2D" uid="uid://b7ygasdnw5hr1" path="res://assets/paddleBlu.png" id="1_g3oqu"]
+[ext_resource type="AudioStream" uid="uid://cerapufg2tsoc" path="res://assets/spell1_0.wav" id="3_mqb13"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5vmwb"]
+height = 94.0
+
+[node name="Coletor" type="Area2D"]
+script = ExtResource("1_5vmwb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_g3oqu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_5vmwb")
+
+[node name="SFXGema" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_mqb13")
+volume_db = -5.0
+
+[connection signal="area_entered" from="." to="." method="_ao_tocar_gema"]

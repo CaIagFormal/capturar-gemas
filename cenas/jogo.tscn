@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://bxw8b0d1dqun4"]
+
+[ext_resource type="Script" uid="uid://cp4slo5sp4vo" path="res://cenas/jogo.gd" id="1_1frua"]
+[ext_resource type="Texture2D" uid="uid://dm0mqmscnby6k" path="res://assets/GameBg.png" id="1_k46e6"]
+[ext_resource type="PackedScene" uid="uid://canen35is57xa" path="res://cenas/coletor.tscn" id="2_32vai"]
+[ext_resource type="PackedScene" uid="uid://r3u6qvwikdqa" path="res://cenas/gema.tscn" id="2_bkotw"]
+[ext_resource type="AudioStream" uid="uid://b8dstxoq4qkt1" path="res://assets/bgm_action_5.mp3" id="5_dmxwg"]
+[ext_resource type="AudioStream" uid="uid://cerapufg2tsoc" path="res://assets/spell1_0.wav" id="6_dtkcs"]
+
+[node name="Jogo" type="Node2D"]
+script = ExtResource("1_1frua")
+cena_de_gema = ExtResource("2_bkotw")
+gemas_limite = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(570, 338)
+texture = ExtResource("1_k46e6")
+
+[node name="Coletor" parent="." instance=ExtResource("2_32vai")]
+position = Vector2(570, 629)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="Placar" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(1, 1, 0, 0.866667)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 48
+text = "00000"
+metadata/_edit_use_anchors_ = true
+
+[node name="BGM" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_dmxwg")
+volume_db = -5.0
+autoplay = true
+
+[node name="SFXGema" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_dtkcs")
+volume_db = -5.0
+
+[connection signal="gema_capturada" from="Coletor" to="." method="_ao_coletor_gema_capturada"]
+[connection signal="timeout" from="Timer" to="." method="_ao_tempo_expirar"]
