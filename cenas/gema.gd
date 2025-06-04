@@ -7,6 +7,7 @@ extends Area2D
 
 @export var velocidade: Vector2
 var vida: int
+var rng: RandomNumberGenerator
 
 @onready var visual: Sprite2D = $ElementRedDiamond
 @onready var colisao: CollisionShape2D = $CollisionShape2D
@@ -18,13 +19,9 @@ func definir_scale():
 	self.scale = Vector2(scale,scale)
 
 func _ready() -> void:
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
 	position.x = rng.randf_range(30.0, get_viewport_rect().size.x -30)
 	velocidade.x = rng.randf_range(-300,300)
-	vida = rng.randf_range(1,5)
 	
-	definir_scale()
 	
 func _process(delta: float) -> void:
 	velocidade.y += aceleracao + varpeso*vida

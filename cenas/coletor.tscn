@@ -14,10 +14,14 @@ script = ExtResource("1_5vmwb")
 texture = ExtResource("1_g3oqu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+z_index = 20
+z_as_relative = false
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_5vmwb")
 
 [node name="SFXGema" type="AudioStreamPlayer2D" parent="."]
+visible = false
 stream = ExtResource("3_mqb13")
 volume_db = -5.0
 
