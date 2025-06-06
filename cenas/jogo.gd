@@ -8,6 +8,7 @@ extends Node2D
 @onready var timer: Timer = $Timer
 @onready var coletores: Array[Coletor]
 @onready var reset: Button = $REINICIAR
+@onready var entrar: Label = $Entrar
 var pontuacao: int = 0
 var gemas: int = 0
 var gameover_label: Label
@@ -17,6 +18,8 @@ var pause: bool = false
 var gameover: bool = false
 var tamanho: float = 1
 var joojadores: int = 1
+@onready var nome_jogador: TextEdit = $NomeJogador
+@onready var botao_jogador: Button = $BotaoJogador
 @onready var bgm: AudioStreamPlayer2D = $BGM
 @onready var sfx_gema: AudioStreamPlayer2D = $SFXGema
 var highscore: FileAccess = FileAccess.open("res://highscore.dat", FileAccess.READ_WRITE)
@@ -46,27 +49,53 @@ func gerar_gema() -> void:
 func _ready() -> void:
 	if highscore == null:
 		highscore = FileAccess.open("res://highscore.dat", FileAccess.WRITE_READ)
-		highscore.seek(0)
-		highscore.store_16(0)
+		escrever_highscore(0,"---")
 		highscore.flush()
-		
 	highscore.seek(0)
-	recorde_val = highscore.get_16();
-	placar_recorde.text = "Recorde Atual: "+str(recorde_val).pad_zeros(5)
+	recorde_val = highscore.get_16()
+	placar_recorde.text = "Recorde Atual: "+ler_highscore(0)
 	gerar_gema()
 	coletores.append($Coletor)
+	
+func escrever_highscore(val_plr: int, nome: String) -> void:
+	highscore.seek(0)
+	var val: int;
+	var len: int;
+	var nome_bytes = nome.to_utf8_buffer()
+	while !highscore.eof_reached():
+		val = highscore.get_16()
+		if val<val_plr:
+			highscore.store_16(val_plr)
+			highscore.store_8(nome_bytes.size())
+			highscore.store_buffer(nome_bytes)
+			return
+		len = highscore.get_16()
+		highscore.seek(highscore.get_position()+len)
+	highscore.store_16(val_plr)
+	highscore.store_8(nome_bytes.size())
+	highscore.store_buffer(nome_bytes)
+	
+func ler_highscore(seek: int = -1) -> String:
+	if seek>-1:
+		highscore.seek(seek)
+	var val: int = highscore.get_16()
+	var len: int = highscore.get_8()
+	
+	var nome: PackedByteArray = highscore.get_buffer(len)
+	print(str(val)+" !! "+str(len)+" !! "+str(nome))
+	return str(val).pad_zeros(5)+" - "+nome.get_string_from_utf8()
+	
 
 func _ao_tempo_expirar() -> void:
 	gerar_gema()
 
 func game_over() -> void:
 	var texto_game_over: String = "Game Over!"
-	if recorde_val<pontuacao:
-		highscore.seek(0)
-		highscore.store_16(pontuacao)
-		highscore.close()
-		texto_game_over = "Novo Recorde!!"
 	
+	if recorde_val<pontuacao:
+		texto_game_over = "Novo Recorde!!"
+	botao_jogador.visible = true;
+	nome_jogador.visible = true;
 	timer.stop()
 	bgm.stop()
 	sfx_gema.stop()
@@ -143,7 +172,7 @@ func _ao_coletor_gema_capturada(gema: Gema,coletor: Coletor) -> void:
 		gemas -= 1
 	placar.text = str(pontuacao).pad_zeros(5)
 	if (pontuacao>recorde_val):
-		placar_recorde.text = "Recorde Atual: "+placar.text
+		placar_recorde.text = "Recorde Atual: "+placar.text+ " - VOCÊ!"
 		
 	
 
@@ -182,7 +211,7 @@ func _on_reiniciar_pressed() -> void:
 	get_tree().reload_current_scene()
 	
 func abrir_novo_joojador() -> void:
-	
+	entrar.text = "P1: Setas\nP2: A e D"
 	joojadores += 1
 	var novo_joojador: Coletor = cena_de_joojador.instantiate()
 	novo_joojador.jogador = joojadores
@@ -199,3 +228,8 @@ func abrir_novo_joojador() -> void:
 		bgm.play()
 	timer.wait_time = 1
 	timer.start()
+
+
+
+func _on_botao_jogador_pressed() -> void:
+	escrever_highscore(pontuacao,nome_jogador.text)

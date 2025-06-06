@@ -75,6 +75,42 @@ theme_override_font_sizes/font_size = 48
 text = "Recorde Atual: 00000"
 metadata/_edit_use_anchors_ = true
 
+[node name="Entrar" type="Label" parent="."]
+offset_left = 902.0
+offset_top = 5.0
+offset_right = 1652.0
+offset_bottom = 142.0
+scale = Vector2(0.32, 0.32)
+theme_override_colors/font_color = Color(1, 1, 0, 0.866667)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 48
+text = "P1: Setas
+P2: Pressione A ou D para entrar"
+metadata/_edit_use_anchors_ = true
+
+[node name="NomeJogador" type="TextEdit" parent="."]
+visible = false
+z_index = 100
+offset_left = 375.0
+offset_top = 50.0
+offset_right = 766.0
+offset_bottom = 113.0
+placeholder_text = "Insira seu nome aqui"
+
+[node name="BotaoJogador" type="Button" parent="."]
+visible = false
+offset_left = 371.0
+offset_top = 156.0
+offset_right = 379.0
+offset_bottom = 164.0
+scale = Vector2(2.56746, 2.01755)
+text = "SALVAR RECORDE"
+
 [connection signal="gema_capturada" from="Coletor" to="." method="_ao_coletor_gema_capturada"]
 [connection signal="timeout" from="Timer" to="." method="_ao_tempo_expirar"]
 [connection signal="pressed" from="REINICIAR" to="." method="_on_reiniciar_pressed"]
+[connection signal="pressed" from="BotaoJogador" to="." method="_on_botao_jogador_pressed"]
